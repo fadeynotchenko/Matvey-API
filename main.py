@@ -140,7 +140,7 @@ async def generate_pdf(request: Request):
         raise HTTPException(status_code=500, detail=f'Failed to generate LaTeX content: {e}')
 
     try:
-        pdf_filename = await asyncio.get_event_loop().run_in_executor(None, generate_and_compile_pdf, latex_content)
+        pdf_filename = await generate_and_compile_pdf(latex_content)
     except Exception as e:
         logging.error("Error generating PDF: %s", e)
         raise HTTPException(status_code=500, detail=f'Failed to generate PDF: {e}')
@@ -158,7 +158,7 @@ async def main():
     # Запускаем задачу обновления кэша
     asyncio.create_task(refresh_cache())
 
-    # Запускаем сервер  daksmsakld
+    # Запускаем сервер
     import uvicorn
     config = uvicorn.Config(app, host="0.0.0.0", port=8000, log_level="info")
     server = uvicorn.Server(config)
